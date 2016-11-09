@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">LocationReader</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="store_location">Store Location</string>
+    <string name="location_name">Location Name</string>
+    <string name="stored_location">Stored locations</string>
+</resources>
