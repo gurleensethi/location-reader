@@ -5,4 +5,5 @@
     <string name="store_location">Store Location</string>
     <string name="location_name">Location Name</string>
     <string name="stored_location">Stored locations</string>
+    <string name="connection_error">Could not connect to Google</string>
 </resources>
