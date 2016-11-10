@@ -1,6 +1,6 @@
 package app.com.thetechnocafe.locationreader.MainLocationReader;
 
-import android.location.Location;
+import android.content.Context;
 
 /**
  * Created by gurleensethi on 10/11/16.
@@ -9,11 +9,13 @@ import android.location.Location;
 public class MVPContracts {
     //View Contract
     public interface IView {
+        public void onLocationAdded(Boolean isSuccessful);
 
+        public Context getContext();
     }
 
     //Presenter Contract
     public interface IPresenter {
-        public void addLocation(String string, Location location);
+        public void addLocation(String string, String latitude, String longitude);
     }
 }

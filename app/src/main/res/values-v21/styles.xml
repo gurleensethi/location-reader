@@ -14,4 +14,8 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
+    <style name="TextInputLayoutErrorText">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
 </resources>

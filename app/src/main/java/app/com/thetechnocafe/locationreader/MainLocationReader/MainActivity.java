@@ -1,17 +1,23 @@
 package app.com.thetechnocafe.locationreader.MainLocationReader;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,28 +30,65 @@ import app.com.thetechnocafe.locationreader.R;
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        MVPContracts.IView {
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private TextView mLatitudeText;
     private TextView mLongitudeText;
     private CoordinatorLayout mCoordinatorLayout;
-    private static final int LOCATION_PERMISSION_REQUST_CODE = 0;
+    private Button mStoreLocationButton;
+    private Button mStoredLocationsButton;
+    private EditText mLocationNameEditText;
+    private TextInputLayout mLocationNameTextInputLayout;
+    private MVPContracts.IPresenter mIPresenter;
+    private static final String TAG = "MainActivity";
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Reference to XML views
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mLatitudeText = (TextView) findViewById(R.id.latitude_text_view);
         mLongitudeText = (TextView) findViewById(R.id.longitude_text_view);
+        mStoreLocationButton = (Button) findViewById(R.id.store_location_button);
+        mStoredLocationsButton = (Button) findViewById(R.id.stored_locations_button);
+        mLocationNameEditText = (EditText) findViewById(R.id.location_name_edit_text);
+        mLocationNameTextInputLayout = (TextInputLayout) findViewById(R.id.location_name_text_input_layout);
+
+        //Create the presenter
+        mIPresenter = new Presenter(this);
 
         setUpOnClickListeners();
         setUpGoogleApiClient();
         setUpLocationRequest();
         checkPermissions();
+    }
+
+    //Set on click listeners
+    private void setUpOnClickListeners() {
+        mStoreLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Check if location name field is not empty
+                //If empty, show error, else save
+                if (mLocationNameEditText.getText().toString().equals("")) {
+                    mLocationNameTextInputLayout.setErrorEnabled(true);
+                    mLocationNameTextInputLayout.setError(getString(R.string.name_required));
+                } else {
+                    mLocationNameTextInputLayout.setErrorEnabled(false);
+                    mIPresenter.addLocation(
+                            mLocationNameEditText.getText().toString(),
+                            mLatitudeText.getText().toString(),
+                            mLongitudeText.getText().toString()
+                    );
+                }
+            }
+        });
     }
 
     @Override
@@ -103,11 +146,6 @@ public class MainActivity extends AppCompatActivity implements
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
-    //Set up the onClickListeners
-    private void setUpOnClickListeners() {
-
-    }
-
     //Configure the Google Api Client
     private void setUpGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -126,8 +164,12 @@ public class MainActivity extends AppCompatActivity implements
 
     //Update last known location
     private void updateWithLastKnownLocation() {
-        Location lastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        updateLocation(lastKnownLocation);
+        updateLocation(getLastKnownLocation());
+    }
+
+    //Get last known location
+    private Location getLastKnownLocation() {
+        return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
 
     //Update the UI with location
@@ -149,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean checkPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
             return false;
         }
         return true;
@@ -158,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUST_CODE) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (permissions.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     updateWithLastKnownLocation();
@@ -169,5 +211,23 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    @Override
+    public void onLocationAdded(Boolean isSuccessful) {
+        String successMessage;
+
+        if (isSuccessful) {
+            successMessage = getString(R.string.location_added_success);
+        } else {
+            successMessage = getString(R.string.location_added_unsuccess);
+        }
+
+        Snackbar.make(mCoordinatorLayout, successMessage, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 }

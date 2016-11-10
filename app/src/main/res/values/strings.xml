@@ -6,4 +6,7 @@
     <string name="location_name">Location Name</string>
     <string name="stored_location">Stored locations</string>
     <string name="connection_error">Could not connect to Google</string>
+    <string name="location_added_success">Location stored successfully</string>
+    <string name="location_added_unsuccess">Location has already been added</string>
+    <string name="name_required">Location name is required</string>
 </resources>

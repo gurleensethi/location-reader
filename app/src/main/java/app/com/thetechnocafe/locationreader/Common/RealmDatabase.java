@@ -1,11 +1,14 @@
 package app.com.thetechnocafe.locationreader.Common;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import app.com.thetechnocafe.locationreader.MainLocationReader.LocationModel;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
 /**
  * Created by gurleensethi on 10/11/16.
@@ -16,13 +19,15 @@ public class RealmDatabase {
     private final Realm mRealm;
 
     //Private constructor for singleton class
-    private RealmDatabase() {
+    private RealmDatabase(Context context) {
+        //Initialize Realm
+        Realm.init(context);
         mRealm = Realm.getDefaultInstance();
     }
 
-    public static RealmDatabase getInstance() {
+    public static RealmDatabase getInstance(Context context) {
         if (mRealmDatabase == null) {
-            mRealmDatabase = new RealmDatabase();
+            mRealmDatabase = new RealmDatabase(context);
         }
         return mRealmDatabase;
     }
@@ -33,13 +38,19 @@ public class RealmDatabase {
     }
 
     //Insert location
-    public void insertLocation(final LocationModel locationModel) {
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealm(locationModel);
-            }
-        });
+    public boolean insertLocation(final LocationModel locationModel) {
+        try {
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.copyToRealm(locationModel);
+                }
+            });
+        } catch (RealmPrimaryKeyConstraintException e) {
+            return false;
+        }
+
+        return true;
     }
 
     //Clear the database
