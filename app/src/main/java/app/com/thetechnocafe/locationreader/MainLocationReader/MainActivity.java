@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -16,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,6 +26,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.vision.text.Line;
 
 import app.com.thetechnocafe.locationreader.R;
 
@@ -40,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements
     private Button mStoreLocationButton;
     private EditText mLocationNameEditText;
     private TextInputLayout mLocationNameTextInputLayout;
+    private LinearLayout mBottomSheetView;
+    private ImageButton mBottomSheetOpenImageButton;
+    private BottomSheetBehavior mBottomSheet;
     private MVPContracts.IPresenter mIPresenter;
     private static final String TAG = "MainActivity";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 0;
@@ -56,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements
         mStoreLocationButton = (Button) findViewById(R.id.store_location_button);
         mLocationNameEditText = (EditText) findViewById(R.id.location_name_edit_text);
         mLocationNameTextInputLayout = (TextInputLayout) findViewById(R.id.location_name_text_input_layout);
+        mBottomSheetView = (LinearLayout) findViewById(R.id.saved_locations_bottom_sheet);
+        mBottomSheetOpenImageButton = (ImageButton) findViewById(R.id.bottom_sheet_up_image_button);
+
+        mBottomSheet = BottomSheetBehavior.from(mBottomSheetView);
 
         //Create the presenter
         mIPresenter = new Presenter(this);
@@ -84,6 +95,44 @@ public class MainActivity extends AppCompatActivity implements
                             mLongitudeText.getText().toString()
                     );
                 }
+            }
+        });
+
+        //Close open bottom sheet
+        mBottomSheetOpenImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (mBottomSheet.getState()) {
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                        mBottomSheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        break;
+                    }
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                        mBottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        break;
+                    }
+                }
+            }
+        });
+
+        mBottomSheet.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                        mBottomSheetOpenImageButton.setImageResource(R.drawable.ic_down_button);
+                        break;
+                    }
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                        mBottomSheetOpenImageButton.setImageResource(R.drawable.ic_up_button);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
             }
         });
     }

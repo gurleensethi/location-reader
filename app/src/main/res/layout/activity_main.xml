@@ -126,8 +126,8 @@
     <LinearLayout
         android:id="@+id/saved_locations_bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:clipToPadding="true"
+        android:layout_height="400dp"
+        android:background="@android:color/white"
         android:orientation="vertical"
         app:behavior_peekHeight="56dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
@@ -139,14 +139,23 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="8"
                 android:fontFamily="sans-serif-light"
                 android:padding="16dp"
                 android:text="@string/stored_location"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"/>
+
+            <ImageButton
+                android:id="@+id/bottom_sheet_up_image_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_up_button"/>
         </LinearLayout>
 
     </LinearLayout>
