@@ -120,16 +120,34 @@
             android:text="@string/store_location"
             android:textColor="@android:color/white"/>
 
-        <Button
-            android:id="@+id/stored_locations_button"
-            android:layout_width="wrap_content"
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/saved_locations_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:clipToPadding="true"
+        android:orientation="vertical"
+        app:behavior_peekHeight="56dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/button_stored_locations"
-            android:fontFamily="sans-serif-light"
-            android:padding="16dp"
-            android:text="@string/stored_location"
-            android:textColor="@android:color/white"/>
+            android:background="@color/colorAccent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:padding="16dp"
+                android:text="@string/stored_location"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"/>
+        </LinearLayout>
 
     </LinearLayout>
 

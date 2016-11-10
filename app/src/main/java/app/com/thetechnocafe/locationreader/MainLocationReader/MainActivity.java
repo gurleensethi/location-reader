@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements
     private TextView mLongitudeText;
     private CoordinatorLayout mCoordinatorLayout;
     private Button mStoreLocationButton;
-    private Button mStoredLocationsButton;
     private EditText mLocationNameEditText;
     private TextInputLayout mLocationNameTextInputLayout;
     private MVPContracts.IPresenter mIPresenter;
@@ -56,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements
         mLatitudeText = (TextView) findViewById(R.id.latitude_text_view);
         mLongitudeText = (TextView) findViewById(R.id.longitude_text_view);
         mStoreLocationButton = (Button) findViewById(R.id.store_location_button);
-        mStoredLocationsButton = (Button) findViewById(R.id.stored_locations_button);
         mLocationNameEditText = (EditText) findViewById(R.id.location_name_edit_text);
         mLocationNameTextInputLayout = (TextInputLayout) findViewById(R.id.location_name_text_input_layout);
 
