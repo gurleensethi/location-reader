@@ -21,6 +21,11 @@ public class StoredLocationsAdapter extends RecyclerView.Adapter<StoredLocations
     private Context mContext;
     private List<LocationModel> mList;
 
+    public StoredLocationsAdapter(Context context, List<LocationModel> list) {
+        mContext = context;
+        mList = list;
+    }
+
     //View holder class
     class StoredLocationsViewHolder extends RecyclerView.ViewHolder {
         private TextView mLatitudeTextView;

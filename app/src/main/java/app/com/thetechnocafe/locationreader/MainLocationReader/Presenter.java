@@ -1,5 +1,7 @@
 package app.com.thetechnocafe.locationreader.MainLocationReader;
 
+import java.util.List;
+
 import app.com.thetechnocafe.locationreader.Common.RealmDatabase;
 
 /**
@@ -12,6 +14,7 @@ public class Presenter implements MVPContracts.IPresenter {
 
     public Presenter(MVPContracts.IView view) {
         mView = view;
+        mView.setUpView();
     }
 
     @Override
@@ -29,5 +32,11 @@ public class Presenter implements MVPContracts.IPresenter {
                 RealmDatabase.getInstance(mView.getContext())
                         .insertLocation(model)
         );
+    }
+
+    @Override
+    public void getLocationData() {
+        List<LocationModel> list = RealmDatabase.getInstance(mView.getContext()).getSaveLocations();
+        mView.onDataReceived(list);
     }
 }

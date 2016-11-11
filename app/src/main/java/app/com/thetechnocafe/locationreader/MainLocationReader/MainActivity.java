@@ -13,6 +13,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,8 +28,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.vision.text.Line;
 
+import java.util.List;
+
+import app.com.thetechnocafe.locationreader.Adapters.StoredLocationsAdapter;
 import app.com.thetechnocafe.locationreader.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements
     private LinearLayout mBottomSheetView;
     private ImageButton mBottomSheetOpenImageButton;
     private BottomSheetBehavior mBottomSheet;
+    private RecyclerView mStoredLocationRecyclerView;
+    private StoredLocationsAdapter mStoredLocationsAdapter;
     private MVPContracts.IPresenter mIPresenter;
     private static final String TAG = "MainActivity";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 0;
@@ -65,16 +71,24 @@ public class MainActivity extends AppCompatActivity implements
         mLocationNameTextInputLayout = (TextInputLayout) findViewById(R.id.location_name_text_input_layout);
         mBottomSheetView = (LinearLayout) findViewById(R.id.saved_locations_bottom_sheet);
         mBottomSheetOpenImageButton = (ImageButton) findViewById(R.id.bottom_sheet_up_image_button);
+        mStoredLocationRecyclerView = (RecyclerView) findViewById(R.id.stored_locations_recycler_view);
 
         mBottomSheet = BottomSheetBehavior.from(mBottomSheetView);
 
         //Create the presenter
         mIPresenter = new Presenter(this);
 
-        setUpOnClickListeners();
         setUpGoogleApiClient();
         setUpLocationRequest();
         checkPermissions();
+
+        //Request Data
+        mIPresenter.getLocationData();
+    }
+
+    @Override
+    public void setUpView() {
+        setUpOnClickListeners();
     }
 
     //Set on click listeners
@@ -275,5 +289,24 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public Context getContext() {
         return getApplicationContext();
+    }
+
+    @Override
+    public void onDataReceived(List<LocationModel> list) {
+        setUpOrRefreshRecyclerView(list);
+    }
+
+    //Set up of refresh existing recycler view on data change
+    private void setUpOrRefreshRecyclerView(List<LocationModel> list) {
+        if (mStoredLocationsAdapter == null) {
+            mStoredLocationsAdapter = new StoredLocationsAdapter(getApplicationContext(), list);
+
+            //Configure recycler view
+            mStoredLocationRecyclerView.setAdapter(mStoredLocationsAdapter);
+            mStoredLocationRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        } else {
+            mStoredLocationsAdapter.updateList(list);
+            mStoredLocationsAdapter.notifyDataSetChanged();
+        }
     }
 }
