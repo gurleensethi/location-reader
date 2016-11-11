@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/stored_location_name_text_view"
         android:layout_marginTop="4dp"
-        android:text="Lat : 23.234546"/>
+        android:text="Lat : 23.234546"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/stored_location_longitude_text_view"
@@ -29,7 +30,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
         android:layout_toRightOf="@id/stored_location_latitude_text_view"
-        android:text="Lat : 23.234546"/>
+        android:text="Lat : 23.234546"
+        android:textColor="@android:color/black"/>
 
     <ImageButton
         android:id="@+id/stored_location_delete_image_button"

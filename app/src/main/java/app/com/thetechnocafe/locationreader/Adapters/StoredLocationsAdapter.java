@@ -57,8 +57,8 @@ public class StoredLocationsAdapter extends RecyclerView.Adapter<StoredLocations
         public void bindData(int position) {
             LocationModel model = mList.get(position);
             mLocationNameTextView.setText(model.getLocationName());
-            mLatitudeTextView.setText(String.valueOf(model.getLatitude()));
-            mLongitudeTextView.setText(String.valueOf(model.getLongitude()));
+            mLatitudeTextView.setText(mContext.getString(R.string.lat_format, String.valueOf(model.getLatitude())));
+            mLongitudeTextView.setText(mContext.getString(R.string.long_format, String.valueOf(model.getLongitude())));
         }
     }
 

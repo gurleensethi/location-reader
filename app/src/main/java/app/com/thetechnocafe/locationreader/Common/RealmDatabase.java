@@ -72,4 +72,14 @@ public class RealmDatabase {
 
         return list;
     }
+
+    //Delete a particular item from database
+    public void deleteLocaion(final String locationName) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                mRealm.where(LocationModel.class).equalTo("mLocationName", locationName).findFirst().deleteFromRealm();
+            }
+        });
+    }
 }
