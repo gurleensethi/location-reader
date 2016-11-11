@@ -29,8 +29,7 @@ public class Presenter implements MVPContracts.IPresenter {
 
         //Insert into realm
         mView.onLocationAdded(
-                RealmDatabase.getInstance(mView.getContext())
-                        .insertLocation(model)
+                RealmDatabase.getInstance(mView.getContext()).insertLocation(model)
         );
     }
 

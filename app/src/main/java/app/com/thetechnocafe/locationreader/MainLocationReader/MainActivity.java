@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (isSuccessful) {
             successMessage = getString(R.string.location_added_success);
+            mIPresenter.getLocationData();
         } else {
             successMessage = getString(R.string.location_added_unsuccess);
         }
